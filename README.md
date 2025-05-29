@@ -1,7 +1,7 @@
 # Calorie application/api witch also can you as recipe book
 
-Application backend : Python/Django
-Application Frontend: Html, Bootsrap css, Custom css, and Javascripts 
+- Application backend : Python/Django
+- Application Frontend: Html, Bootsrap css, Custom css, and Javascripts 
 
 Simple calory/recipe book application, with fine design for educational purposes. 
 Not registered users can view food information, and dish information.
@@ -85,23 +85,23 @@ API:
 
 Installed modules:
 
-asgiref==3.8.1
-beautifulsoup4==4.13.4
-crispy-bootstrap5==2025.4
-Django==4.2.20
-django-bootstrap-v5==1.0.11
-django-crispy-forms==2.4
-django-tinymce==4.1.0
-djangorestframework==3.16.0
-djangorestframework_simplejwt==5.5.0
-drf-redesign==0.5.1
-fontawesomefree==6.6.0
-pillow==11.2.1
-PyJWT==2.9.0
-six==1.17.0
-soupsieve==2.7
-sqlparse==0.5.3
-typing_extensions==4.13.2
+- asgiref==3.8.1
+- beautifulsoup4==4.13.4
+- crispy-bootstrap5==2025.4
+- Django==4.2.20-
+- django-bootstrap-v5==1.0.11
+- django-crispy-forms==2.4
+- -django-tinymce==4.1.0 
+- djangorestframework==3.16.0
+- djangorestframework_simplejwt==5.5.0 
+- drf-redesign==0.5.1 
+- fontawesomefree==6.6.0 
+- pillow==11.2.1
+- PyJWT==2.9.0
+- six==1.17.0
+- soupsieve==2.7
+- sqlparse==0.5.3
+- typing_extensions==4.13.2
 
 
 NOTES:
@@ -129,3 +129,6 @@ INSTALL:
 - Create the database:( python3 manage.py makemigrations and then python3 manage.py migrate )
 - Create a superuser ( python3 manage.py createsuperuser )
 - Run the application ( python3 manage.py runserver )
+
+  ![sample dish](https://github.com/user-attachments/assets/059c283e-5b71-4a5e-95f0-9b133272826c)
+
