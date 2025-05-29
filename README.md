@@ -130,5 +130,10 @@ INSTALL:
 - Create a superuser ( python3 manage.py createsuperuser )
 - Run the application ( python3 manage.py runserver )
 
+
+
+A Sample example image from dish page: 
+
+
   ![sample dish](https://github.com/user-attachments/assets/059c283e-5b71-4a5e-95f0-9b133272826c)
 
