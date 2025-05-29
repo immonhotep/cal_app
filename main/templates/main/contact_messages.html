@@ -1,0 +1,136 @@
+  {% extends "main/main.html" %}
+
+ {% block content %}
+ {% if contact_messages  %}
+  <div class="container my-5 py-5">
+    <div class="row d-flex justify-content-center">
+      <div class="col-md-12 col-lg-10">
+        <div class="card text-body">
+          <div class="card-body p-4">
+            <h4 class="mb-0">Contact Messages</h4>
+            <p class="fw-light mb-4 pb-2">Latest messages from site visitors</p>
+
+            <form method="GET" id="answer" action={% url 'contact-messages' %} >
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="RadioSelect" id="answer-id" value="all" {% if request.session.order_checked == "all" %} checked {% endif %}>
+                <label class="form-check-label" for="inlineRadio1">All</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="RadioSelect" id="answer-id" value="answered" {% if request.session.order_checked == "answered" %} checked {% endif %}>
+                <label class="form-check-label" for="inlineRadio2">Answered</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="RadioSelect" id="answer-id" value="unanswered" {% if request.session.order_checked == "unanswered" %} checked {% endif %}>
+                <label class="form-check-label" for="inlineRadio3">Unanswered</label>
+              </div>
+
+
+            </form>
+
+            {% for message in contact_messages %}
+            <div class="d-flex flex-start my-2">            
+              <div>
+                <h6 class="fw-bold mb-1">{{message.name}}</h6>
+                <small class="fw-bold mb-1"><i class="fa-solid fa-envelope"></i> {{message.email}}|</small>
+                <small class="fw-bold mb-1"><i class="fa-solid fa-phone"></i> {{message.phone}}</small>
+                <div class="d-flex align-items-center mb-3">
+                  <p class="mb-0">
+                    {{message.date}}
+                    {% if message.answer_set.count == 0 %}
+                    <span class="badge bg-danger">Unanswered</span>
+                    {% else %}
+                    <span class="badge bg-success"><a class="text-white" href="{% url 'answers' message.pk %}">Answered</a></span>
+                    {% endif %}
+                    <span ><button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#AnswerModal-{{message.pk}}">send answer</button></span>
+                    {% include "main/modal.html" %}
+                  </p>          
+                </div>
+                <p class="mb-0">
+                <b>Title: <i>{{message.title}}</i></b>
+                </p>
+                <b>Message:</b>
+                <p class="mb-0">  
+                {{message.body|safe}}
+                </p>
+              </div>
+            </div>
+            <hr class="my-0" /> 
+            {% endfor %}
+          </div>       
+          </div>
+
+
+           {% if contact_messages.has_other_pages %}
+                      <nav aria-label="Page navigation example">
+                          <ul class="pagination pagination-sm py-3">
+                            {% if contact_messages.has_previous %}
+                            <li class="page-item"><a class="page-link text-white me-1  bg-dark"  href="?page={{contact_messages.previous_page_number }}{% if request.GET.RadioSelect %}&RadioSelect={{request.GET.RadioSelect}}{% endif %}">Previous</a></li>
+                            {% endif%}
+
+                            {% for num  in contact_messages.paginator.page_range %}
+                            {% if contact_messages.number == num %}
+                            <li class="page-item"><a class="page-link text-white me-1  bg-dark"   href="">{{num}}</a></li>
+                            {% else %}
+                            <li class="page-item"><a class="page-link text-white me-1  bg-dark"  href="?page={{ num }}{% if request.GET.RadioSelect%}&RadioSelect={{request.GET.RadioSelect}}{% endif %}">{{num}}</a></li>
+                            {% endif %}
+                            {% endfor %}
+                            {% if contact_messages.has_next %}
+                            <li class="page-item"><a class="page-link text-white me-1  bg-dark"  href="?page={{contact_messages.next_page_number }}{% if request.GET.RadioSelect%}&RadioSelect={{request.GET.RadioSelect}}{% endif %}">Next</a></li>
+                            {% endif %}
+                    
+                          </ul>
+                    </nav>
+                      {% endif %}
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+{% if answers %}
+
+  <div class="container my-5 py-5 text-body">
+    <div class="row d-flex justify-content-center"> 
+      <div class="col-md-11 col-lg-9 col-xl-7">
+      {% for answer in answers %}
+        <div class="d-flex flex-start mb-4">
+                  
+          <div class="card w-100">    
+            <div class="card-body p-4">
+              <div class="">
+                <h5>{{answer.title}}</h5>
+                <p class="small">{{answer.date}} @{{answer.user}}</p>
+                <p>
+                 {{answer.body|safe}}
+                </p>
+
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center">
+                  
+              </div>
+            </div>      
+          </div> 
+                 
+        </div>
+         {% endfor %}
+         
+      </div>
+      
+    </div>
+    <a id="user-link" href="javascript:history.back()" class="btn btn-outline-primary my-2">back</a>
+  </div>
+
+  {% endif  %}
+
+
+
+<script>
+$('input[type=radio]').on('change', function() {
+    $(this).closest("form").submit();
+});
+</script>
+
+
+  {% endblock content%}

@@ -1,0 +1,93 @@
+{% extends "main/main.html" %}
+
+{% block content %}
+
+
+
+{% if foods %}
+ <div class="container py-5">
+    <div class="row justify-content-center mb-3">
+      <div class="col-md-12 col-xl-10">
+        <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+        {% for food in foods %}
+         
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+                <div class="bg-image hover-zoom ripple rounded ripple-surface">
+                  <img src="{{food.imageURL}} "
+                    class="w-100" style="height:300px;" />
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-6 col-xl-6">
+                <h5>{{food.name}}</h5>
+                <div class="d-flex flex-row">
+                  <div class="text-success mb-1 me-2">
+                    <small>{{food.category}}</small>
+                  </div>
+                  {% if not food.authorized %}
+                  <div class="text-danger mb-1 me-2">
+                    <small>(This food still not authorized by admin)</small>
+                  </div>
+                  {% endif %}
+        
+                </div>
+                <div class="mt-1 mb-0 text-muted small ms-2">
+                <li><b>Calory:</b><i> {{food.calory}}</i></li>
+                <li><b>Fiber:</b><i> {{food.fiber}}</i></li>
+                <li><b>Fat:</b><i> {{food.fat}}</i></li>
+                <li><b>Protein:</b><i> {{food.protein}}</i></li> 
+                <li><b>Carbohydrate:</b><i> {{food.carbohydrate}}</i></li>
+                </div>
+                <p class="text-truncate mb-4 mb-md-0">
+                <small><i>{{food.description|safe|truncatechars:200}}</i></small>
+                
+                </p>
+                <p class="text-muted"><i>Uploaded by:</i><b> <small><a id="user-link" href={% url 'show-profile' food.owner.pk %}>{{food.owner.username}}</a></small></b></p>
+              </div>
+              <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
+                <div class="d-flex flex-column mt-4">
+                  <a href="{% url 'detail-food' food.pk %}" class="btn btn-primary btn-sm">Details</a>
+                  {% if food.owner == request.user %}
+                  <a href="{% url 'update-food' food.pk %}?prev={{ request.get_full_path }}" class="btn btn-outline-warning btn-sm mt-2" type="button">
+                    Update
+                  </a>
+                  <button type="button" class="btn btn-outline-danger btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#foodModal-{{food.pk}}">
+                  Delete
+                  </button>
+                  {% include 'main/modal.html'%}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr>
+    
+          {% endfor %}
+        </div>      
+        {% if foods.has_other_pages %}
+            <nav aria-label="Page navigation example">
+            <ul class="pagination pagination-sm mt-6 ms-8">
+                {% if tasks.has_previous %}
+                  <li class="page-item"><a class="page-link text-white me-1 bg-dark"  href="?page={{foods.previous_page_number }}{% if request.GET.search %}&search={{request.GET.search}}{% endif %}">Previous</a></li>
+                {% endif%}
+
+                  {% for num  in foods.paginator.page_range %}
+                    {% if foods.number == num %}
+                      <li class="page-item"><a class="page-link text-white me-1 bg-dark" style="background-color:#077e58;"  href="">{{num}}</a></li>
+                    {% else %}
+                      <li class="page-item"><a class="page-link text-white me-1 bg-dark" style="background-color:#077e58;" href="?page={{ num }}{% if request.GET.search %}&search={{request.GET.search}}{% endif %}">{{num}}</a></li>
+                    {% endif %}
+                  {% endfor %}
+                {% if foods.has_next %}
+                  <li class="page-item"><a class="page-link text-white me-1 bg-dark" style="background-color:#077e58;" href="?page={{foods.next_page_number }}{% if request.GET.search %}&search={{request.GET.search}}{% endif %}">Next</a></li>
+                {% endif %}                            
+            </ul>
+            </nav>            
+        {% endif %}
+      </div>
+    </div>  
+  </div> 
+  {% endif %}
+
+{% endblock content %}

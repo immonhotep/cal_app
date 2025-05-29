@@ -1,0 +1,48 @@
+{% load static%}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{% block title %}{% endblock %}</title>
+  <!-- boostrap version 5 -->
+  {% load bootstrap5 %}
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
+
+  <!-- fontawesome version 6.6.0 -->
+  <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
+  <link href="{% static 'fontawesomefree/css/regular.css' %}" rel="stylesheet" type="text/css"> 
+  
+  <!-- for  charts-->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+
+</head>
+<body>
+
+
+
+{% include "main/navbar.html" %}
+{% include "main/messages.html" %}
+
+{% if request.user.is_authenticated %}
+<div id='wrapper' class="mt-5 me-5">
+<div class="card" style="max-width: 200px;">
+    <div class="card-body text-center">
+        <img src="{{request.user.profile.imageURL}}" class="avatar avatar-2lg">
+        <h3 class="card-title avatar-text">{{request.user.username}}</h3>
+    </div>
+</div>
+</div>
+{% endif %}
+
+
+
+  {% block content %}
+  {% endblock %}
+
+</div>
+</body>
+</html>

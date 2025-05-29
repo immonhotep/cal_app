@@ -1,0 +1,26 @@
+{% extends "main/main.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="content">
+  <div class="main p-3 pt-4">
+    <div class="container">
+      <div class="col-xs-12 col-lg-10 col-xl-8">
+        <div class="card row shadow-lg p-3 mb-5 bg-white rounded">
+          <div class="card-header">
+            <h4 class="mr-auto mb-0 pr-3">Contact us</h4>
+          </div>
+          <div class="card-body">
+            <form method="POST">
+            {% csrf_token %}
+            {{form|crispy}}
+            {{form.media}}
+            <button type="submit" class="btn btn-primary my-2">Submit</button>
+            <a id="user-link" href="{% url 'home' %}" class="btn btn-outline-primary my-2">back</a>
+            </form>                            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

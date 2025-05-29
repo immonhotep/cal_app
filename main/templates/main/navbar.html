@@ -1,0 +1,96 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a id="colorized-bgrnd" class="navbar-brand" href="{% url 'home' %}"><i class="fa-solid fa-bowl-food"></i> All Foods</a>
+    <a id="colorized-bgrnd" class="navbar-brand" href="{% url 'list-all-dishes' %}"><i class="fa-solid fa-utensils"></i> All Dishes</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarScroll">
+      <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+      <li class="nav-item dropdown">
+          <a id="colorized-bgrnd" class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-list"></i> Food Categories
+          </a>
+          
+          <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+            {% for key,value in food_cat_dict.items %}
+              
+              <li><a class="dropdown-item" href="{% url 'food-category' key  %}"><i class="fa-solid {{value.0}}"></i> {{key}}({{value.1}})</a></li>
+            {% endfor %}        
+          </ul>
+        </li>
+        <li class="nav-item dropdown mx-1">
+          <a id="colorized-bgrnd" class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-list"></i> Dish Categories
+          </a>
+          
+          <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+            {% for key,value in dish_cat_dict.items %}
+              
+              <li><a class="dropdown-item" href="{% url 'dish-category' key  %}"><i class="fa-solid {{value.0}}"></i> {{key}}({{value.1}})</a></li>
+            {% endfor %}        
+          </ul>
+        </li>
+
+
+
+       {% if request.user.is_authenticated %}
+        <li class="nav-item dropdown">
+          <a id="colorized-bgrnd" class="nav-link dropdown-toggle mx-1" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-burger"></i> Manage
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+            <li><a class="dropdown-item" href="{% url 'add-food' %}"><i class="fa-solid fa-square-plus"></i> Add food </a></li>
+            <li><a class="dropdown-item" href="{% url 'list-own-foods' %}"><i class="fa-solid fa-list-check"></i> List my foods</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'create-dish' %}"><i class="fa-solid fa-circle-plus"></i> Create Dish</a></li>
+            <li><a class="dropdown-item" href="{% url 'list-dish' %}"><i class="fa-solid fa-list-check"></i> List my dishes</a></li>
+          </ul>
+        </li>
+        {% endif %}
+        <li class="nav-item dropdown mx-1">
+          <a id="colorized-bgrnd" class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-user"></i>
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+            {% if not request.user.is_authenticated %}
+            <li><a class="dropdown-item" href="{% url 'login' %}"> <i class="fa fa-sign-in" aria-hidden="true"></i> Login</a></li>
+            <li><a class="dropdown-item" href="{% url 'register' %}"><i class="fa fa-user-plus" aria-hidden="true"></i> Register</a></li>
+            {% else %}
+            <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="fa fa-wrench" aria-hidden="true"></i> Profile</a></li>
+            <li><a class="dropdown-item" href="{% url 'password-change' %}"><i class="fa-solid fa-lock"></i> Change Password</a></li>
+            <form action="{% url 'logout' %}" method="POST">
+            {% csrf_token %}
+            <li><button class="dropdown-item" href="{% url 'logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</button></li>
+            </form>
+            {% endif %}
+            
+          </ul>
+        </li>
+        {% if request.user.is_superuser %}
+        <li class="nav-item dropdown">
+          <a id="colorized-bgrnd" class="nav-link dropdown-toggle mx-1" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-user-tie"></i> Site administration
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+            <li><a class="dropdown-item" href="{% url 'unauthorized-foods' %}"><i class="fa-solid fa-square-xmark"></i> List unauthorized foods </a></li>
+            <li><a class="dropdown-item" href="{% url 'unauthorized-dishes' %}"><i class="fa-regular fa-circle-xmark"></i> List unauthorized dishes </a></li>
+            <li><a class="dropdown-item" href="{% url 'users' %}"><i class="fa-solid fa-users"></i> List Users</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'contact-messages' %}"><i class="fa-regular fa-comments"></i> List contact messages</a></li>
+          </ul>
+        </li>
+        {% endif %}
+
+
+
+        <a id="colorized-bgrnd" class="nav-link" href="{% url 'contact' %}"><i class="fa-solid fa-circle-info"></i> Contact</a>
+
+      </ul>
+      <form class="d-flex" method="GET" action="{% url 'search' %}">
+        <input class="form-control me-2" type="search" name="search" placeholder="Search for foods" aria-label="Search">
+        <button class="btn btn-dark btn-sm" type="submit">Ok</button>
+      </form>
+    </div>
+  </div>
+</nav>

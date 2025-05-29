@@ -1,0 +1,275 @@
+{% extends "main/main.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+
+<div class="container py-5">
+    <div class="row">
+        <!-- dish Images -->
+        <div class="col-md-5 mb-4">
+        
+            <div class="card">
+                
+                    <img src="{{dish.imageURL}}" class="img-fluid rounded-start" style="max-width: 100%; height:500px;"> 
+               
+                <div class="card-body">
+                    <div class="row g-2">
+                    <hr>
+                    <small><i>{{dish.description|safe}}</i></small>          
+                    </div>
+                </div>
+            </div>
+          
+        </div>
+
+        <div class="col-md-7">
+            <h1 class="h2 mb-3 text-white">{{dish.name}}</h1>
+
+            <!--star ratio system  --> 
+        
+            {% if request.user.is_authenticated %}
+                {% if not ratio %} 
+                    <form method="POST" action = {% url 'send_star_rating' dish.pk%}>
+                        {% csrf_token %}
+                        
+                        <div class="rating-bg h-100 d-flex align-items-center justify-content-center flex-row-reverse py-3 my-3">
+                            <button class="btn btn-primary btn-sm mx-3" type="submit">rate</button>
+                            <input class="star star-5" id="star-5" type="radio" name="star" value="5"/>
+                            <label class="star star-5" for="star-5"></label>
+                            <input class="star star-4" id="star-4" type="radio" name="star" value="4"/>
+                            <label class="star star-4" for="star-4"></label>
+                            <input class="star star-3" id="star-3" type="radio" name="star" value="3"/>
+                            <label class="star star-3" for="star-3"></label>
+                            <input class="star star-2" id="star-2" type="radio" name="star" value="2"/>
+                            <label class="star star-2" for="star-2"></label>
+                            <input class="star star-1" id="star-1" type="radio" name="star" value="1"/>
+                            <label class="star star-1" for="star-1"></label>
+                            
+                        </div>                      
+                    </form>
+                {% else %}
+
+                <div class="rating-bg my-4 py-4 d-flex justify-content-center small text-warning mb-2">               
+                     <span>
+                        <i class="{% if dish.averagerate < 0.5%}fa-regular fa-star{% elif dish.averagerate >= 0.5 and dish.averagerate < 1 %}fa-solid fa-star-half-stroke{% else %}fa-solid fa-star{% endif %} fa-xl" aria-hidden="true"></i>
+                        <i class="{% if dish.averagerate < 1.5%}fa-regular fa-star{% elif dish.averagerate >= 1.5 and dish.averagerate < 2 %}fa-solid fa-star-half-stroke{% else %}fa-solid fa-star{% endif %} fa-xl" aria-hidden="true"></i>
+                        <i class="{% if dish.averagerate < 2.5%}fa-regular fa-star{% elif dish.averagerate >= 2.5 and dish.averagerate < 3 %}fa-solid fa-star-half-stroke{% else %}fa-solid fa-star{% endif %} fa-xl" aria-hidden="true"></i>
+                        <i class="{% if dish.averagerate < 3.5%}fa-regular fa-star{% elif dish.averagerate >= 3.5 and dish.averagerate < 4 %}fa-solid fa-star-half-stroke{% else %}fa-solid fa-star{% endif %} fa-xl" aria-hidden="true"></i>
+                        <i class="{% if dish.averagerate < 4.5%}fa-regular fa-star{% elif dish.averagerate >= 4.5 and dish.averagerate < 5 %}fa-solid fa-star-half-stroke{% else %}fa-solid fa-star{% endif %} fa-xl" aria-hidden="true"></i>
+                        <small class="countrate">({{dish.countrate}})</small>
+                    </span>
+                </div>
+              {% endif %}
+
+            {% else %}
+              {% if dish.averagerate %}
+              
+                <div class="rating-bg my-4 py-4 d-flex justify-content-center small text-warning mb-2">
+                    <span>
+                        <i class="{% if dish.averagerate < 0.5%}fa-regular fa-star{% elif dish.averagerate >= 0.5 and dish.averagerate < 1 %}fa-solid fa-star-half-stroke{% else %}fa-solid fa-star{% endif %} fa-xl" aria-hidden="true"></i>
+                        <i class="{% if dish.averagerate < 1.5%}fa-regular fa-star{% elif dish.averagerate >= 1.5 and dish.averagerate < 2 %}fa-solid fa-star-half-stroke{% else %}fa-solid fa-star{% endif %} fa-xl" aria-hidden="true"></i>
+                        <i class="{% if dish.averagerate < 2.5%}fa-regular fa-star{% elif dish.averagerate >= 2.5 and dish.averagerate < 3 %}fa-solid fa-star-half-stroke{% else %}fa-solid fa-star{% endif %} fa-xl" aria-hidden="true"></i>
+                        <i class="{% if dish.averagerate < 3.5%}fa-regular fa-star{% elif dish.averagerate >= 3.5 and dish.averagerate < 4 %}fa-solid fa-star-half-stroke{% else %}fa-solid fa-star{% endif %} fa-xl" aria-hidden="true"></i>
+                        <i class="{% if dish.averagerate < 4.5%}fa-regular fa-star{% elif dish.averagerate >= 4.5 and dish.averagerate < 5 %}fa-solid fa-star-half-stroke{% else %}fa-solid fa-star{% endif %} fa-xl" aria-hidden="true"></i>
+                         <small class="countrate">({{dish.countrate}})</small>
+                    </span> 
+                </div>
+              {% else %}     
+              <div class="rating-bg my-4 d-flex justify-content-center small text-white">
+                <small class="countrate"> Not rated ({{dish.countrate}}) </small>
+              </div>
+              {% endif %}
+         
+            {% endif %}
+      
+            <!--star ration system-->
+   
+
+        
+            <div class="mb-3 ms-3">
+                        <table class="table text-white">
+                            <thead>
+                                <tr>
+                                <th scope="col"></th>
+                                <th scope="col">name</th>
+                                <th scope="col">Calory (<small>Kcal</small>)</th>
+                                <th scope="col">Fat (<small>g</small>)</th>
+                                <th scope="col">Protein (<small>g</small>)</th>
+                                <th scope="col">Carbs (<small>g</small>)</th>
+                                <th scope="col">Fiber (<small>g</small>)</th>
+                                <th scope="col">(<small>g</small>)</th>                                
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                {% for food in dish.ingredients.all %}
+                                
+                                <tr>
+                                <td scope="row"><img src="{{food.imageURL}}" class="img-fluid rounded-start" style="width: 50px; height:50px;"></td>
+                                <th scope="row"><a id="dish-foods" href="{% url 'detail-food' food.pk %}">{{food.name}}</a></th>
+                                <td>
+                                {% for key,value in calory.items %}
+                                    {% if key == food %}
+                                        {{value}}
+                                    {% endif %}
+                                {% endfor %}  
+                                </td>
+                                <td>
+                                {% for key,value in fat.items %}
+                                    {% if key == food %}
+                                        {{value}}
+                                    {% endif %}
+                                {% endfor %}
+                                </td>
+                                <td>
+                                {% for key,value in protein.items %}
+                                    {% if key == food %}
+                                        {{value}}
+                                    {% endif %}
+                                {% endfor %}                              
+                                </td>
+                                <td>
+                                {% for key,value in carbohydrate.items %}
+                                    {% if key == food %}
+                                        {{value}}
+                                    {% endif %}
+                                {% endfor %}
+                                </td>
+                                <td>
+                                 {% for key,value in fiber.items %}
+                                    {% if key == food %}
+                                        {{value}}
+                                    {% endif %}
+                                {% endfor %}                               
+                                </td>
+                                <td>
+                                <form method="POST" action="{% url 'count-amount' dish.pk %}">
+                                {% csrf_token %}
+                            
+                                <div  class="form-outline">
+                                {% if amounts %}
+                                    {% for amount in amounts %}
+                                        {% if amount.food.pk == food.pk %}
+                                            <input type="number" name="count" min="1" step="1" value="{{amount.numb}}" class="form-control" {% if dish.owner != request.user %} disabled {% endif %}  />
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                                </div>
+
+                                </td>   
+                                </tr>
+
+                            
+                                {% endfor %}
+                                
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th scope="row">Summary</th>
+                                    <td></td>
+                                    {% for i in sum_list %}
+                                    <td>{{i|floatformat:3}}</td>                                    
+                                    {% endfor %}
+                                    <td>
+                                        <input value="{{summary|floatformat:3}}" class="form-control" disabled />
+                                    </td>
+                                </tr>
+                            </tfoot>
+                            </table> 
+                            {% if dish.owner == request.user %}
+                            <button type="submit" class="btn btn-primary btn-sm">Calculate</button>  
+                            {% endif %}
+                            </form>
+            </div>
+            <p class="mb-4">{{food.description|safe}}</p>
+            <!--CHART-->
+                <div class="card py-1 my-1">
+                    <div class="card-header">
+                        <i class="fa fa-pie-chart" aria-hidden="true"></i>
+                            Dish Chart
+                    </div>
+                    <div class="card-body"><canvas id="dish_chart" data-url="{% url 'dish-chart' dish.pk %}" width="100%" height="40"></canvas></div>
+                </div>
+            <!-- Actions -->
+            <div class="d-grid gap-2">
+                <a id="user-link"  href="javascript:history.back()" class="btn btn-outline-secondary" type="button">
+                    Back
+                </a>
+            </div>
+
+            {% if request.user.is_superuser %}
+                <div class="container py-2 my-2">
+                    <form method="POST" action="{% url 'authorize-dish' dish.pk%}">
+                    {% csrf_token %}
+                    <div class="form-check">
+                    <label class="form-check-label py-2 text-white" for="flexCheckDisabled">
+                        Unathorize/Authorize
+                    </label>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" name="dish-status" id="dish-status" type="checkbox" {% if dish.authorized %} checked {% else %} {% endif%} >
+                        <label class="form-check-label">{% if dish.authorized %}<b class="badge bg-success">Authorized</b> {% else %}<b class="badge bg-danger">Unathorized</b>{% endif %}</label>          
+                    </div>
+                    </div>
+                    </form> 
+                </div>
+            {% endif %} 
+
+
+
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+$(function () {
+      var $dish_chart = $("#dish_chart");
+      $.ajax({
+        url: $dish_chart.data("url"),
+        success: function (data) {
+
+          var ctx = $dish_chart[0].getContext("2d");
+         
+          new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+              labels: data.labels,
+              datasets: [{
+                label: 'amount',
+                backgroundColor: [
+                      '#731F00', '#004D4D', '#5E40BE', '#003366',
+                      ],
+                data: data.data
+                
+              }]          
+            },
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Nutrient in gram / {{summary}} gram'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+</script>
+
+<script type="text/javascript">
+  jQuery(function() {
+    jQuery('#dish-status').change(function() {
+        this.form.submit();
+    });
+});
+</script>
+
+{% endblock content %}

@@ -1,0 +1,120 @@
+{% extends "main/main.html" %}
+
+{% block content %}
+
+
+
+{% if dishes %}
+ <div class="container py-5">
+    <div class="row justify-content-center mb-3">
+      <div class="col-md-12 col-xl-10">
+        <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+        {% for dish in dishes%}
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+                <div class="bg-image hover-zoom ripple rounded ripple-surface">
+                  <img src="{{dish.imageURL}} "
+                    class="w-100" style="height:300px;" />
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-6 col-xl-6">
+                <h5>{{dish.name}}</h5>
+              <!--star rating -->
+              {% if dish.averagerate %}
+            
+                <div class="rating-bg my-4 py-4 d-flex justify-content-center small text-warning mb-2">
+                    <span>
+                        <i class="{% if dish.averagerate < 0.5%}fa-regular fa-star{% elif dish.averagerate >= 0.5 and dish.averagerate < 1 %}fa-solid fa-star-half-stroke{% else %}fa-solid fa-star{% endif %}" aria-hidden="true"></i>
+                        <i class="{% if dish.averagerate < 1.5%}fa-regular fa-star{% elif dish.averagerate >= 1.5 and dish.averagerate < 2 %}fa-solid fa-star-half-stroke{% else %}fa-solid fa-star{% endif %}" aria-hidden="true"></i>
+                        <i class="{% if dish.averagerate < 2.5%}fa-regular fa-star{% elif dish.averagerate >= 2.5 and dish.averagerate < 3 %}fa-solid fa-star-half-stroke{% else %}fa-solid fa-star{% endif %}" aria-hidden="true"></i>
+                        <i class="{% if dish.averagerate < 3.5%}fa-regular fa-star{% elif dish.averagerate >= 3.5 and dish.averagerate < 4 %}fa-solid fa-star-half-stroke{% else %}fa-solid fa-star{% endif %}" aria-hidden="true"></i>
+                        <i class="{% if dish.averagerate < 4.5%}fa-regular fa-star{% elif dish.averagerate >= 4.5 and dish.averagerate < 5 %}fa-solid fa-star-half-stroke{% else %}fa-solid fa-star{% endif %}" aria-hidden="true"></i>
+                         <small class="countrate">({{dish.countrate}})</small>
+                    </span> 
+                </div>
+              
+              {% else %}
+               
+              <div class="rating-bg my-4 d-flex justify-content-center small text-white">
+                <small class="countrate"> Not rated ({{dish.countrate}}) </small>
+              </div>
+             
+              {% endif %}
+              
+              <!--star rating -->
+
+
+
+
+                <div class="d-flex flex-row">
+                  <div class="text-danger mb-1 me-2">
+                    <small>{{dish.type}}</small>
+                  </div>
+                  {% if not dish.authorized %}
+                  <div class="text-danger mb-1 me-2">
+                    <small>(This dish still not authorized by admin)</small>
+                  </div>
+                  {% endif %}
+
+
+                </div>
+                <h6>Foods:</h6>
+                <div class="mt-1 mb-0 text-muted small ms-2"> 
+                {% for food in dish.ingredients.all %}
+                <li><b>{{food.name}}:</b></li>
+                {% endfor %}
+       
+                </div>
+                <p class="text-truncate mb-4 mb-md-0">
+                <small><i>{{dish.description|safe|truncatechars:200}}</i></small>
+                </p>
+                <p class="text-muted"><i>Uploaded by:</i><b> <small><a id="user-link" href={% url 'show-profile' dish.owner.pk %}>{{dish.owner.username}}</a></small></b></p>
+              </div>
+              <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
+                <div class="d-flex flex-column mt-4">
+                  
+                  <a href="{% url 'dish-detail' dish.pk %}" class="btn btn-primary btn-sm">Details</a>
+              
+                  {% if dish.owner == request.user %}
+                  
+                  <a href="{% url 'update-dish' dish.pk %}?prev={{ request.get_full_path }}" class="btn btn-outline-warning btn-sm mt-2" type="button">
+                    Update
+                  </a>
+                 <button type="button" class="btn btn-outline-danger btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#dishModal-{{dish.pk}}">
+                  Delete
+                  </button>
+                   {% include 'main/modal.html'%}
+        
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr>
+          {% endfor %}
+        </div>
+        {% if dishes.has_other_pages %}
+          <nav aria-label="Page navigation example">
+          <ul class="pagination pagination-sm mt-6 ms-8">
+            {% if dishes.has_previous %}
+              <li class="page-item"><a class="page-link text-white me-1  bg-dark" href="?page={{dishes.previous_page_number}}">Previous</a></li>
+            {% endif%}
+            {% for page  in dishes.paginator.page_range %}
+              <li class="page-item"><a class="page-link  text-white me-1 bg-dark"  href="?page={{page}}">{{page}}</a></li>
+            {% endfor %}
+            {% if dishes.has_next %}
+              <li class="page-item"><a class="page-link  text-white me-1  bg-dark"  href="?page={{dishes.next_page_number}}">Next</a></li>
+            {% endif %}
+          </ul>
+          </nav>
+        {% endif %}
+      </div>
+    </div>  
+  </div> 
+  {% endif %}
+  
+
+
+
+{% endblock content %}

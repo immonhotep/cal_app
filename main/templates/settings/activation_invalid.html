@@ -1,0 +1,25 @@
+{% extends 'main/main.html'%}
+
+{% block content %}
+<head>
+	<title>{% block title %}Activation invalid {% endblock title %}</title>
+	<meta charset="utf-8">
+
+	
+</head>
+
+<div class="container py-5 h-100">       
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="card w-75 shadow-custom">
+                <div class="card-body">
+                    <h2>Sorry</h3>
+                    <h4>This account activation link expired</h4>
+                    <p>Please contact side admins with your problem <a id="user-link"  href="{% url 'contact' %}" >here</a></p>
+                    <a href="{% url 'home' %}" class="btn btn-outline-primary btn-sm">Back To Home</a>                        
+                </div>
+           </div>
+        </div>  
+    </div> 
+
+
+{% endblock content %}

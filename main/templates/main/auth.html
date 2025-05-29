@@ -1,0 +1,55 @@
+{% extends "main/main.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" 
+          content="width=device-width, 
+                   initial-scale=1,
+                   shrink-to-fit=no" />
+    <title>{% block title %}{% if header == "login" %} Login {% elif header == "register" %} Register{% endif %}{% endblock %}</title>
+</head>
+
+<body>
+
+    <h3 class="text-white text-center my-2 py-2">
+        {% if header == "login" %} Login {% elif header == "register" %} Register new account {% endif %}
+    </h1>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="POST">
+                        {% csrf_token %}
+                            <div class="form-group">
+                              {{ form|crispy }}
+                            </div>
+                            <button class="btn btn-outline-primary my-2">
+                                Submit
+                            </button>
+                        </form>
+                        {% if header == "register" %}
+                        <p class="mt-3 auth-link">
+                            Do you have account ?
+                            <a id="user-link" href="{% url 'login' %}">Login</a>
+                        </p>
+                        {% elif header == "login" %}
+                        <p class="mt-3 auth-link">
+                            Forgot your password ?  
+                            <a id="user-link" href="{% url 'password_reset' %}">Click Here</a>
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock content %}

@@ -1,0 +1,127 @@
+{% extends "main/main.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row">
+        <!-- food Images -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+               <img src="{{food.imageURL}}" class="img-fluid rounded-start" style="max-width: 100%; height:500px;"> 
+                <div class="card-body">
+                    <p>Several other foods in {{food.category}}'</p>
+                    <div class="row g-2">
+                        {% for  item in same_category|slice:"8" %}
+                        <div class="col-3">
+                            <a class="item-image" href="{% url 'detail-food' item.pk %}"><img src="{{item.imageURL}}" class="img-thumbnail" style="height:100px;width:100px;"></a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 text-white">
+            <h1 class="h2 mb-3">{{food.name}}</h1>
+            <div class="mb-3 ms-3  cal-details">
+            <li><b>Calory:</b><i> {{food.calory}}</i></li>
+            <li><b>Fiber:</b><i> {{food.fiber}}</i></li>
+            <li><b>Fat:</b><i> {{food.fat}}</i></li>
+            <li><b>Protein:</b><i> {{food.protein}}</i></li> 
+            <li><b>Carbohydrate:</b><i> {{food.carbohydrate}}</i></li>     
+            </div>
+            
+
+            <p class="mb-4 food-desc">{{food.description|safe}}</p>
+            <!--CHART-->
+                <div class="card py-1 my-1">
+                    <div class="card-header">
+                        <i class="fa fa-pie-chart" aria-hidden="true"></i>
+                            Food Chart
+                    </div>
+                    <div class="card-body"><canvas id="food_chart" data-url="{% url 'food_chart' food.pk %}" width="100%" height="40"></canvas></div>
+                </div>
+            <!-- Actions -->
+            <div class="d-grid gap-2">
+                <a id="user-link"  href="javascript:history.back()" class="btn btn-outline-secondary" type="button">
+                    Back
+                </a>
+            </div>
+            {% if request.user.is_superuser %}
+           
+            <div class="container py-2 my-2">
+                <form method="POST" action="{% url 'authorize' food.pk %}">
+                {% csrf_token %}
+                <div class="form-check">
+                  <label class="form-check-label py-2" for="flexCheckDisabled">
+                    Unathorize/Authorize
+                  </label>
+                  <div class="form-check form-switch">
+                      <input class="form-check-input" name="food-status" id="food-status" type="checkbox" {% if food.authorized %} checked {% else %} {% endif%} data-bs-placement="left" data-bs-title="sefff" >
+                       <label class="form-check-label" data-bs-toggle="tooltip">{% if food.authorized %}<b class="badge bg-success">Authorized</b> {% else %}<b class="badge bg-danger">Unathorized</b>{% endif %}</label>          
+                       
+                  </div>
+                   <small class="info-message">(unathorize food will cause: dishes witch contain this food, get also unathorized status )</small>
+
+                </div>
+                </form> 
+            </div>
+            {% endif %}               
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+$(function () {
+      var $food_chart = $("#food_chart");
+      $.ajax({
+        url: $food_chart.data("url"),
+        success: function (data) {
+
+          var ctx = $food_chart[0].getContext("2d");
+         
+          new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+              labels: data.labels,
+              datasets: [{
+                label: 'amount',
+                backgroundColor: [
+                      '#731F00', '#004D4D', '#5E40BE', '#003366',
+                      ],
+                data: data.data
+                
+              }]          
+            },
+            options: {
+              responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Nutrient in gram / 1 gram'
+              }
+            }
+          });
+
+        }
+      });
+
+    });
+</script>
+
+
+<script type="text/javascript">
+  jQuery(function() {
+    jQuery('#food-status').change(function() {
+        this.form.submit();
+    });
+});
+</script>
+      
+{% endblock content %}

@@ -1,0 +1,77 @@
+{% extends "main/main.html" %}
+
+{% block content %}
+<div class="content">
+  <div class="main p-3 pt-4">
+    <div class="container">
+      <div class="col-xs-12 col-lg-10 col-xl-8">
+        <div class="card row shadow-lg p-3 mb-5 bg-white rounded">
+          <div class="card-header">
+            <h4 class="mr-auto mb-0 pr-3">Users</h4>
+          </div>
+          <div class="card-body">
+            
+            <ul class="list-group list-group-light">
+                {% for user in users %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                    <a href="{% url 'show-profile' user.pk %}"><img src="{{user.profile.imageURL}}" class="rounded-circle" alt=""
+                        style="width: 45px; height: 45px" /></a>
+                    <div class="ms-3">
+                        <p class="fw-bold mb-1">{{user.first_name}} {{user.last_name}}</p>
+                        <p class="text-muted mb-0">{{user.email}}</p>
+                    </div>
+                    </div>
+                     <form method="POST" action="{% url 'user-status' user.pk%}">
+                     {% csrf_token %}
+                    <span>
+
+                       <div class="form-check form-switch">
+                            <input class="form-check-input" name="user-status" id="user-status-{{user.pk}}" type="checkbox" {% if user.is_active %} checked {% endif %}>
+                            <label class="form-check-label">{% if user.is_active %}<b class="badge bg-success">Active</b> {% else %}<b class="badge bg-danger">Inactive</b>{% endif %}</label>           
+                        </div>
+                        
+                    </span>
+                   
+                    </form>
+                    
+                </li>
+
+              <script type="text/javascript">
+                jQuery(function() {
+                  jQuery('#user-status-{{user.pk}}').change(function() {
+                      this.form.submit();
+                  });
+              });
+              </script>
+                {% endfor %}
+            </ul> 
+            
+             
+
+            {% if users.has_other_pages %}
+              <nav aria-label="Page navigation example" class="py-2">
+              <ul class="pagination pagination-sm mt-6 ms-8">
+                {% if users.has_previous %}
+                  <li class="page-item"><a class="page-link text-white me-1  bg-dark" href="?page={{users.previous_page_number}}">Previous</a></li>
+                {% endif%}
+                {% for page  in users.paginator.page_range %}
+                  <li class="page-item"><a class="page-link  text-white me-1 bg-dark"  href="?page={{page}}">{{page}}</a></li>
+                {% endfor %}
+                {% if users.has_next %}
+                  <li class="page-item"><a class="page-link  text-white me-1  bg-dark"  href="?page={{users.next_page_number}}">Next</a></li>
+                {% endif %}
+              </ul>
+              </nav>
+            {% endif %}                 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock content %}
+
+
