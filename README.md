@@ -1,7 +1,24 @@
 # Calorie application/api Which also can use as recipe book
 
-- Application backend : Python/Django
-- Application Frontend: Html, Bootsrap css, Custom css, and Javascripts 
+ - Application backend:
+   
+ <p align="center">
+  <a href="https://go-skill-icons.vercel.app/">
+    <img
+      src="https://go-skill-icons.vercel.app/api/icons?i=python,django,djangorestframework"
+    />
+  </a>
+</p>
+  
+- Application Frontend:
+
+ <p align="center">
+  <a href="https://go-skill-icons.vercel.app/">
+    <img
+      src="https://go-skill-icons.vercel.app/api/icons?i=html,bootstrap,css,javascript"
+    />
+  </a>
+</p>
 
 Simple calory/recipe book application, with fine design for educational purposes. 
 Not registered users can view food information, and dish information.
