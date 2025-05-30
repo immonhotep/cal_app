@@ -1,4 +1,4 @@
-# Calorie application/api witch also can you as recipe book
+# Calorie application/api Which also can use as recipe book
 
 - Application backend : Python/Django
 - Application Frontend: Html, Bootsrap css, Custom css, and Javascripts 
