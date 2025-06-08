@@ -646,7 +646,7 @@ class Search(View):
         if search is not None:
             foods = Foods.objects.filter(authorized=True).filter(Q(name__icontains=search)|Q(description__icontains=search)).order_by('-name')
         else:
-           foods = Foods.objects.all()
+           foods = Foods.objects.all().order_by('-name')
 
         p = Paginator(foods,2)
         page = self.request.GET.get('page')
