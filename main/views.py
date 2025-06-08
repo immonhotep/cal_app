@@ -641,28 +641,27 @@ class CountAmount(LoginRequiredMixin,View):
 class Search(View):
 
     def get(self,request):
-
+        
         search = request.GET.get('search',None)
         if search is not None:
-            
             foods = Foods.objects.filter(authorized=True).filter(Q(name__icontains=search)|Q(description__icontains=search)).order_by('-name')
-            
+        else:
+           foods = Foods.objects.all()
 
-            p = Paginator(foods,2)
-            page = self.request.GET.get('page')
+        p = Paginator(foods,2)
+        page = self.request.GET.get('page')
 
-            try:
-                foods = p.page(page)
-            except PageNotAnInteger:
-                foods = p.page(1)
-            except EmptyPage:
-                foods = p.page(p.num_pages)
+        try:
+            foods = p.page(page)
+        except PageNotAnInteger:
+            foods = p.page(1)
+        except EmptyPage:
+            foods = p.page(p.num_pages)
 
         context = {'foods':foods}
         return render(request,'main/home.html',context)
 
     
-#&authorization probléma ???
 class AuthorizeFoods(SuperUserRequiredMixin,View):
     
     def post(self,request,pk):
